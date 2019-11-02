@@ -1,0 +1,85 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block metadescription %}
+	This is the shopping cart page.
+{% endblock %}
+
+{% block title %}
+	Thank you - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/main_styles.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/product.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-thanks.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Order Complete</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span><a href="{% url 'order:history' %}">Shopping Cart</a></span> <span>Checkout</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row row-pb-lg">
+			<div class="col-md-10 offset-md-1">
+				<div class="process-wrap">
+					<div class="process text-center">
+						<p><span>01</span></p>
+						<h3>Shopping Cart</h3>
+					</div>
+					<div class="process text-center">
+						<p><span>02</span></p>
+						<h3>Place Order</h3>
+					</div>
+					<div class="process text-center active">
+						<p><span>03</span></p>
+						<h3>Order Complete</h3>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 col-md-offset-1 text-center">
+				<span class="icon"><i class="icon-shopping-cart"></i></span>
+				<h2 class="text-center my_title">Thank you for purchasing, Your order is complete!</h2>
+				<p>Your order number is: <b>#{{ customer_order.id }}</b></p>
+				<p>We have received your order and will processing right away!</p>
+				<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+					<div class="ml-auto mr-auto">
+						<div class="button button_continue trans_200"><a href="/">Home</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

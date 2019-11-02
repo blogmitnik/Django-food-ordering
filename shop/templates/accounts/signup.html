@@ -1,0 +1,157 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block metadescription %}
+	Sign up to get a new account with us.
+{% endblock %}
+
+{% block title %}
+	Create new account - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/cart.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-join-us.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Sign Up</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Sign Up</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			{% if request.user.is_authenticated %}
+				<div class="mx-auto">
+					<h1 class="text-center my_title">Your have already signeed in!</h1>
+					<br>
+					<div>
+						<p class="text-center">
+							<a href="{% url 'shop:allProdCat' %}">Countinue shopping</a>, and have a nice day!
+						</p>
+					</div>
+				</div>
+			{% else %}
+				<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
+					<br>
+					<h2 class="my_title">Already have an account?</h2>
+					<br>
+					<p>Sign in with your registered account.</p>
+					<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+						<div class="ml-auto mr-auto">
+							<div class="button button_continue trans_200"><a href="{% url 'signin' %}">Sign In Now</a></div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
+					<br>
+					<h1 class="text-center my_title">Create new account</h1>
+					<br>
+					<div class="col-10 col-sm-10 col-md-10 col-lg-10 mx-auto bg-light">
+						<section class="table-area section-padding">
+							<form method="POST" enctype="multipart/form-data">
+								{% csrf_token %}
+								<fieldset class="form-group">
+									<legend class="border-bottom mb-4 text-center">Join us today</legend>
+									{{ form | crispy }}
+								</fieldset>
+								<div class="form-group">
+									<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+										<div class="cart_buttons_inner ml-sm-auto d-flex flex-row align-items-start justify-content-start flex-wrap">
+											<div class="button trans_200"><button type="submit" class="btn stripe-button-el">Sign Up</button></div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</section>
+						<div class="border-top pt-3">
+							<small class="text-muted">
+								Alreday have an account? <a href="{% url 'signin' %}" class="ml-2">Sign In Today</a>
+							</small>
+						</div>
+						<br>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".stripe-button-el span").remove();
+    $("button.stripe-button-el").removeAttr('style').css({
+        "display":"inline-block",
+        "width":"100%",
+        "padding":"10px",
+        "background":"#3fb0ac",
+        "color":"white",
+        "font-size":"1.3em",
+        "font-family": "Baloo Bhai"
+    }).html("Sign Up Today");
+
+    $('.dateinput').datetimepicker({
+        format: 'YYYY-MM-DD',
+        sideBySide: true
+    });
+
+	// Altered content for the form loaded by crispy forms
+	var photoInnerContent="<label for='id_photo' \n" + 
+	"class='control-label'>Profile picture</label><br>\n" +
+	"<button id='upload_pic_btn' class='btn btn-outline-secondary'>\n" +
+	"<i class=\"fas fa-image\"></i> Choose Picture</button><strong id='file_name_display'>\n" +
+	 "</strong><div class='controls'> <input name='photo'\n" +
+	  "class='clearablefileinput' id='id_photo' type='file'\n" +
+	   "style='position:absolute; left:-999px;'></div>";
+
+	// Changing the content of the required div containing photo upload field rendered by crispy forms
+	$("#div_id_photo").html(photoInnerContent);
+
+	// When custom button is clicked, perform a click on file upload field
+	$("#upload_pic_btn").click(function() {
+		$("#id_photo").click();
+	});
+
+	// When file has been selected, this call back is triggered
+	document.getElementById("id_photo").onchange = function () {
+	  var str = this.value;
+	  // Split the path of file uploaded
+	  var pathTokens = str.split("\\");
+	  // Display name of file beside the custom button
+	  $("#file_name_display").html(" " + pathTokens[pathTokens.length - 1]);
+	};
+});
+</script>
+{% endblock %}

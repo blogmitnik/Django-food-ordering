@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/shop">Disney Highland</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item dropdown {% if 'shop' in request.path %}active{% endif %}">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Restaurants
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'shop:allProdCat' %}">All Shops</a>
+          {% for cat in links %}
+    			  <a class="dropdown-item" href="{{ cat.get_url }}">{{ cat.name }}</a>
+    		  {% endfor %}
+          {% if request.user.is_superuser %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'choice_place' %}">Set Restaurant Today</a>
+          {% endif %}
+        </div>
+      </li>
+      {% if item_count > 0 %}
+	      <li class="nav-item">
+	        <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>({{ item_count }})</a>
+	      </li>
+      {% endif %}
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action="{% url 'search_app:searchResult' %}" method="post">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="search" class="form-control" placeholder="Search for foods" aria-label="Search" aria-describedby="button-addon2" name="q">
+        <div class="input-group-append">
+          <button class="btn btn-info" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</nav>

@@ -1,0 +1,83 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block metadescription %}
+	Search result
+{% endblock %}
+
+{% block title %}
+	Search - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/category.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/category_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/category.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-search.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Search Results</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Search for {{ query }}</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<!-- Foods Menu -->
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 offset-lg-3">
+				<div class="section_title text-center">You have searched for <b>{{ query }}</b></div>
+				{% ifequal products.count 0 %}
+					<p class="text-justify text-center">There are {{ products.count }} results matched!</p>
+				{% endifequal %}
+			</div>
+		</div>
+
+		<div class="row products_row">
+		{% for product in products %}
+			<!-- Product -->
+			<div class="col-xl-4 col-md-6">
+				<div class="card shop-item text-center" style="width: 18rem;">
+					<a href="{{ product.get_url }}"><img class="card-img-top my_image" src="{{ product.image.url }}" alt="{{ product.name }}"></a>
+					<div class="card-body">
+						<h4>{{ product.name }}</h4>
+						<p>$ {{ product.price }}</p>
+					</div>
+				</div>
+			</div>
+		{% empty %}
+			<div class="row mx-auto">
+				<p class="text-center my_search_text">No result found!</p>
+			</div>
+		{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "shop/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	Welcome - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/main_styles.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/product.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/product_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/product.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-recipes.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Choice Place</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Choice Place</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+{% if place_list %}
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 offset-lg-3">
+				<div class="section_title text-center">Choice Order Place</div>
+				<p class="text-justify text-center">Choice order place based on your business trip location</p>
+				</div>
+			</div>
+
+			<div class="row products_row">
+			{% for place in place_list %}
+				<div class="col-xl-4 col-md-6">
+					<div class="card shop-item text-center" style="width: 18rem;">
+				     	<div class="card-body">
+					        <h3 class="card-title">{{ place.name }}</h3>
+					        <p class="card-text">{{ place.description }}</p>
+					        <div class="button load_more ml-auto mr-auto"><a href="{% url 'shop:restaurants' place.slug %}">Restaurants</a></div>
+				      	</div>
+				    </div>
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% else %}
+	<p>No Place here</p>
+{% endif %}
+{% endblock content %}

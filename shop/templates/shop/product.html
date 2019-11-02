@@ -1,0 +1,305 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block metadescription %}
+	{{ product.description|truncatewords:155 }}
+{% endblock %}
+
+{% block title %}
+	{{ product.name }} - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link rel="stylesheet" type="text/css" href='{% static "plugins/flexslider/flexslider.css" %}'>
+    <link href='{% static "shop/css/product.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/product_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'plugins/flexslider/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/product.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-product.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Food Detail</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span><a href="{{ product.category.place.get_url }}">{{ product.category.place.name }}</a></span> <span><a href="{% url 'shop:restaurants' product.category.place.slug %}">{{ category.place.name }}</a></span> <span><a href="{{ product.category.get_url }}">{{ product.category }}</a></span> <span>{{ product.name }}</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<!-- Foods Menu -->
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<!-- Message -->
+			<div class="col-md-12">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						      <span aria-hidden="true">&times;</span>
+						    </button>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+			<!-- Product Image -->
+			<div class="col-lg-6">
+				<div class="product_image_slider_container">
+					<div id="slider" class="flexslider">
+						<ul class="slides">
+							<li>
+								<img src="{{ product.image.url }}" alt="" style="height: 520px;" />
+							</li>
+							<li>
+								<img src="{{ product.image.url }}" alt="" style="height: 520px;" />
+							</li>
+							<li>
+								<img src="{{ product.image.url }}" alt="" style="height: 520px;" />
+							</li>
+						</ul>
+					</div>
+					<div class="carousel_container">
+						<div id="carousel" class="flexslider">
+							<ul class="slides">
+								<li>
+									<div><img src="{{ product.image.url }}" /></div>
+								</li>
+								<li>
+									<div><img src="{{ product.image.url }}" /></div>
+								</li>
+								<li>
+									<div><img src="{{ product.image.url }}" /></div>
+								</li>
+							</ul>
+						</div>
+						<div class="fs_prev fs_nav disabled"><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
+						<div class="fs_next fs_nav"><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Product Info -->
+			<div class="col-lg-6 product_col">
+				<div class="product_info">
+					<form method="POST" id="_add_product_{{ product.id }}_to_cart" action="{% url 'cart:add_cart' product.id %}">
+						{% csrf_token %}
+						<div class="product_name">{{ product.name }}</div>
+						<div class="product_category">In <a href="{{ product.category.get_url }}">{{ product.category.name }}</a></div>
+						<div class="product_description">
+							<p>{{ product.description }}</p>
+						</div>
+						<div class="product_rating_container d-flex flex-row align-items-center justify-content-start">
+							<div class="rating_r rating_r_4 product_rating">
+								{% load pinax_ratings_tags %}
+								<div id="user_rating" class="category-prefer"></div>
+								{% user_rating_js request.user product "prefer" %}
+								{% user_rating_url request.user product as rating_url %}
+							</div>
+							<div class="product_reviews" id="overall_rating">
+								{% overall_rating product as the_overall_rating %}
+    							<span class="overall_rating">{{ the_overall_rating|floatformat }}</span>
+    							{% rating_count product as count %}
+    							from {{ count }} customers
+    						</div>
+						</div>
+						<div class="product_price">${{ product.price|floatformat }}<span>.00</span></div>
+						{% if product.stock <= 0 %}
+							<div class="product_size">
+								<h2 class="text-justify my_prod_text">Oops...Sold out!</h2>
+							</div>
+						{% else %}
+							{% if product.category.select == 1 and product.category.place == request.user.userprofile.location.parent and user.userprofile.can_order %}
+								<div class="product_size">
+									<div class="product_size_title">How many meals do you want?</div>
+									<ul class="d-flex flex-row align-items-start justify-content-start">
+										<li>
+											<input type="radio" id="radio_1" name="item_qty" value="1" class="regular_radio radio_1" checked>
+											<label for="radio_1">1</label>
+										</li>
+										<li>
+											<input type="radio" id="radio_2" name="item_qty" value="2" class="regular_radio radio_2">
+											<label for="radio_2">2</label>
+										</li>
+										<li>
+											<input type="radio" id="radio_3" name="item_qty" value="3" class="regular_radio radio_3">
+											<label for="radio_3">3</label>
+										</li>
+										<li>
+											<input type="radio" id="radio_4" name="item_qty" value="4" class="regular_radio radio_4">
+											<label for="radio_4">4</label>
+										</li>
+										<li>
+											<input type="radio" id="radio_5" name="item_qty" value="5" class="regular_radio radio_5">
+											<label for="radio_5">5</label>
+										</li>
+									</ul>
+								</div>
+								
+								<div class="product_text">
+									<!-- <textarea class="form-control form-rounded" rows="3" name="memo" placeholder="Write personal notes before adding to your cart!"></textarea> -->
+									{% crispy form %} 
+								</div>
+								<div class="product_buttons">
+									<div class="text-right d-flex flex-row align-items-start justify-content-start">
+										<div class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+											<div><div><a href="{% url 'like:like_product' product.slug %}">{% if product.id in liked_items %}<img src="/static/shop/images/unlike.svg" class="svg" alt="unlike"></a>{% else %}<img src="/static/shop/images/like.svg" class="svg" alt=""></a>{% endif %}</div></div>
+										</div>								
+										<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+											<div><div><a onclick="document.getElementById('_add_product_{{ product.id }}_to_cart').submit();" class="custom_a"><img src="/static/shop/images/cart.svg" class="svg" alt="Add to cart"></a><div>+</div></div></div>
+										</div>
+									</div>
+								</div>
+							{% else %}
+								<div class="product_text">This menu is only for <strong>{{ product.category.place.name }}</strong> staff. If you need to order meal at {{ product.category.place.name }}, please <a href="{% url 'user:edit_profile' %}">change your office place</a> and then contact assistant in office!</div>
+							{% endif %}
+						{% endif %}
+					</form>
+					<br>
+				</div>
+			</div>
+
+			<!-- Boxes -->
+
+			<div class="boxes">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="box d-flex flex-row align-items-center justify-content-start">
+								<div class="mt-auto"><div class="box_image"><img src="/static/shop/images/boxes_1.png" alt=""></div></div>
+								<div class="box_content">
+									<div class="box_title">Price Guide</div>
+									<div class="box_text">Please make sure your total order price is under $30.</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 box_col">
+							<div class="box d-flex flex-row align-items-center justify-content-start">
+								<div class="mt-auto"><div class="box_image"><img src="/static/shop/images/boxes_2.png" alt=""></div></div>
+								<div class="box_content">
+									<div class="box_title">Shipping</div>
+									<div class="box_text">Your will be notified when the foods are arriving to your place.</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+    $(document).ajaxSend(function(event, xhr, settings) {
+    	function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+<script type="text/javascript" src="/static/pinax/ratings/js/jquery.raty.js"></script>
+<script type="text/javascript">
+    $(function () {
+        // Assumptions:
+        // 1. you have a div with the id of "user_rating" where you want the stars to go
+        // 2. you have a container with the class .overall_rating where the new average rating will go
+        $("#user_rating").raty({
+            score: function() {
+                return $(this).attr('data-score');
+            },
+            click: function(score, evt) {
+                var current_rating = 0;
+                if (score != null) {
+                    current_rating = score;
+                }
+                console.log("Score", score, "{{ rating_url }}");
+                $.ajax({
+                    url: "{{ rating_url }}",
+                    type: "POST",
+                    data: {
+                        "rating": current_rating
+                        {% if category %}
+                        ,"category": "{{ category }}"
+                        {% endif %}
+                    },
+                    statusCode: {
+                        403: function(jqXHR, textStatus, errorThrown) {
+                            // Invalid rating was posted or invalid category was sent
+                            console.log(errorThrown);
+                        },
+                        200: function(data, textStatus, jqXHR) {
+                            {% if category %}
+                                $(".overall_rating.category-{{ category }}").text(data["overall_rating"]);
+                            {% else %}
+                                $(".overall_rating").text(data["overall_rating"]);
+                            {% endif %}
+                            $(".overall_rating").fancybox({
+						        'width' : '75%',
+						        'height' : '75%',
+						        'type' : 'iframe'
+						    });
+                        }
+                    }
+                });
+            },
+            cancel: false,
+            path: "/static/pinax/ratings/img/"
+        });
+    });
+</script>
+{% endblock %}

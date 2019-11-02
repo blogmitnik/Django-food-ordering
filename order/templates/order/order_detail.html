@@ -1,0 +1,115 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+	Order Details - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/cart.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-family.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Order Details</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span><a href="{% url 'order:history' %}">Orders</a></span> <span>Order Details</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<br>
+			<h1 class="text-center my_title">Order #{{ order.id }} Details</h1>
+			<br>
+			<table class="table table-bordered">
+				<tr>
+					<td class="text-left">
+						<b>Order: </b>#{{ order.id }}<br>
+						<b>Date: </b>{{ order.created|date:"Y M d" }}<br>
+						<b>Order Total: </b>$ {{ order.total }}<br>
+						<b>Status: </b>{{ order.order_status_str }}
+					</td>
+					<td class="text-left" colspan="2">
+						<b>Shipping to: </b><br>
+						{{ order.shippingName }}<br>
+					</td>
+					<td class="text-left" colspan="1">
+						<b>Order Place: </b><br>
+						{{ order.order_place_str }}<br>
+					</td>
+					<td class="text-left" colspan="1">
+						<b>Details: </b><br>
+						Order has been proceeded successfully!
+					</td>
+				</tr>
+				<tr>
+					<td><b>Product Description</b></td>
+					<td><b>Qty</b></td>
+					<td><b>Unit Price</b></td>
+					<td><b>Sub Total</b></td>
+					<td><b>Personal Notes</b></td>
+				</tr>
+				{% for item in order_items %}
+				<tr>
+					<td>{{ item.product }}</td>
+					<td>{{ item.quantity }}</td>
+					<td>{{ item.price }}</td>
+					<td>{{ item.sub_total }}</td>
+					<td>{{ item.memo }}</td>
+				</tr>
+				{% endfor %}
+				<tr>
+					<td class="text-right" colspan="5"><b>Total Price:</b> $ {{ order.total }}</td>
+				</tr>
+			</table>
+			<!-- Order Buttons -->
+			<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+				<div class="cart_buttons_inner ml-sm-auto d-flex flex-row align-items-start justify-content-start flex-wrap">
+					{% ifequal order.status 0 %}
+						<form id="_close_order_{{order.id}}" action="{% url 'order:change_status' order.id 1 %}" method="post">
+						{% csrf_token %}
+							<div class="button button_clear trans_200"><a href="#" onclick="document.getElementById('_close_order_{{order.id}}').submit();"><i class="fas fa-lock"></i> Close Order</a></div>
+						</form>
+					{% else %}
+						<form id="_open_order_{{order.id}}" action="{% url 'order:change_status' order.id 0 %}" method="post">
+							{% csrf_token %}
+							<div class="button button_continue trans_200"><a href="#" onclick="document.getElementById('_open_order_{{order.id}}').submit();"><i class="fas fa-unlock"></i> Open Order</a></div>
+						</form>
+					{% endifequal %}
+					<br>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

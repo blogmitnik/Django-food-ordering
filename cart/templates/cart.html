@@ -1,0 +1,283 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block metadescription %}
+	This is the shopping cart page.
+{% endblock %}
+
+{% block title %}
+	Cart - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/checkout.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/checkout_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/checkout.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_container_inner">
+	<div class="super_overlay"></div>
+	<div class="colorlib-loader"></div>
+
+	<!-- Cover -->
+	<div id="page">
+		<aside id="colorlib-hero" class="breadcrumbs">
+			<div class="flexslider">
+				<ul class="slides">
+				   	<li style="background-image: url(/static/img/cover-img-cart.jpg);">
+				   		<div class="overlay"></div>
+				   		<div class="container">
+				   			<div class="row">
+					   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+					   				<div class="slider-text-inner text-center">
+					   					<h1>Shopping Cart</h1>
+					   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Your Cart</span></h2>
+					   				</div>
+					   			</div>
+					   		</div>
+				   		</div>
+				   	</li>
+			  	</ul>
+		  	</div>
+		</aside>
+	</div>
+
+	{% if cart_items %}
+		<!-- Cart -->
+		<div class="colorlib-shop">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						{% if messages %}
+							{% for message in messages %}
+								<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								      <span aria-hidden="true">&times;</span>
+								    </button>
+									{{ message }}
+								</div>
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div class="col-md-10 offset-md-1">
+						<div class="process-wrap">
+							<div class="process text-center active">
+								<p><span>01</span></p>
+								<h3>Shopping Cart</h3>
+							</div>
+							<div class="process text-center">
+								<p><span>02</span></p>
+								<h3>Place Order</h3>
+							</div>
+							<div class="process text-center">
+								<p><span>03</span></p>
+								<h3>Order Complete</h3>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="cart_container">
+							
+							<!-- Cart Bar -->
+							<div class="cart_bar">
+								<ul class="cart_bar_list item_list d-flex flex-row align-items-center justify-content-end">
+									<li class="mr-auto">Food Items</li>
+									<li>Note</li>
+									<li>Price</li>
+									<li>Quantity</li>
+									<li>Total</li>
+									<li>Remove</li>
+								</ul>
+							</div>
+
+							<!-- Cart Items -->
+							{% for cart_item in cart_items %}
+								<div class="cart_items">
+									<ul class="cart_items_list">
+
+										<!-- Cart Item -->
+										<li class="cart_item item_list d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-end justify-content-start">
+											<div class="product d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start mr-auto">
+												<div><div class="product_number">{{ cart_item.pk }}</div></div>
+												<div><div class="product_image"><img src="{{ cart_item.product.image.url }}" class="" alt="{{ cart_item.product.name }}"></div></div>
+												<div class="product_name_container">
+													<div class="product_name"><a href="{{ cart_item.product.get_url }}">{{ cart_item.product.name }}</a></div>
+													<div class="product_text">{{ cart_item.product.description }}</div>
+												</div>
+											</div>
+											<div class="product_color product_text"><span>Note: </span>{{ cart_item.memo|truncatechars:12 }}</div>
+											<div class="product_size product_text"><span>Price: </span>${{ cart_item.product.price }}</div>
+											<div class="product_quantity_container">
+												<div class="product_quantity ml-lg-auto mr-lg-auto text-center">
+													<span class="product_text product_num">{{ cart_item.quantity }}</span>
+													<!-- Remove Item -->
+													<div class="qty_sub qty_button trans_200 text-center">
+														<form id="_item_remove_{{ cart_item.product.id }}" method="post" action="{% url 'cart:cart_remove' cart_item.product.id %}">
+														{% csrf_token %}
+															<a onclick="document.getElementById('_item_remove_{{ cart_item.product.id }}').submit();" class=""><span>-</span></a>
+														</form>
+													</div>
+													<!-- Add Item -->
+													<div class="qty_add qty_button trans_200 text-center">
+														<form id="_item_add_{{ cart_item.product.id }}" method="post" action="{% url 'cart:add_cart' cart_item.product.id %}">
+														{% csrf_token %}
+															<a onclick="document.getElementById('_item_add_{{ cart_item.product.id }}').submit();" class=""><span>+</span></a>
+														</form>
+													</div>
+												</div>
+											</div>
+											<div class="product_total product_text">
+												<span>Total: </span>${{ cart_item.sub_total }}
+											</div>
+											<!-- Clear Item -->
+											<div class="product_quantity_container">
+												<form id="_all_clear_{{ cart_item.product.id }}" method="post" action="{% url 'cart:full_remove' cart_item.product.id %}">
+												{% csrf_token %}
+													<a onclick="document.getElementById('_all_clear_{{ cart_item.product.id }}').submit();" class="custom_a"><i class="fas fa-trash custom_icon"></i></a>
+												</form>
+											</div>
+										</li>
+									</ul>
+								</div>
+							{% endfor %}
+
+							<!-- Cart Buttons -->
+							<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+								<div class="cart_buttons_inner ml-sm-auto d-flex flex-row align-items-start justify-content-start flex-wrap">
+									<div class="button button_clear trans_200"><a href="{% url 'cart:clear_cart' %}">clear cart</a></div>
+									<div class="button button_continue trans_200"><a href="{% url 'shop:allProdCat' %}">Continue Shopping</a></div>
+								</div>
+							</div>
+							<br>
+						</div>
+					</div>
+
+					<!-- Billing -->
+					<div class="col-lg-6">
+						<div class="cart_total">
+							<div class="checkout_title">Shipping Info</div>
+							<div class="checkout_form_container">
+								<form action="" id="checkout_form" class="checkout_form" method="post">
+									{% csrf_token %}
+									<div class="row">
+										<div class="col-lg-6">
+											<!-- Name -->
+											<input type="text" id="checkout_name" class="checkout_input" placeholder="First Name" required="required" value="{{ request.user.first_name }}">
+										</div>
+										<div class="col-lg-6">
+											<!-- Last Name -->
+											<input type="text" id="checkout_last_name" class="checkout_input" placeholder="Last Name" required="required" value="{{ request.user.last_name }}">
+										</div>
+									</div>
+									<div>
+										<!-- Company -->
+										<input type="text" id="checkout_company" placeholder="Company" class="checkout_input" value="Quanta Computer Inc">
+									</div>
+									<div>
+										<!-- Shipping To -->
+										<select name="order_place" id="checkout_province" class="dropdown_item_select checkout_input" require="required">
+											{% for k, v in request.user.userprofile.OFFICE_SELECTION %}
+												<option value="{{ k }}" {% ifequal k request.user.userprofile.location.pk %}selected="selected"{% endifequal %} {% ifnotequal k request.user.userprofile.location.pk %}disabled{% endifnotequal %}>{{ v }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div>
+										<!-- Email -->
+										<input type="phone" id="checkout_email" class="checkout_input" placeholder="Email" required="required" value="{{ request.user.email }}">
+									</div>
+									<div>
+										<!-- Phone no -->
+										<input type="phone" id="checkout_phone" class="checkout_input" placeholder="Phone No." required="required" value="{{ request.user.userprofile.phone_number }}">
+									</div>
+									
+									<div class="checkout_extra">
+										<ul>
+											<li class="billing_info d-flex flex-row align-items-center justify-content-start">
+												<label class="checkbox_container">
+													<input type="checkbox" id="cb_1" name="billing_checkbox" class="billing_checkbox">
+													<span class="checkbox_mark"></span>
+													<span class="checkbox_text">Terms and conditions</span>
+												</label>
+											</li>
+											<li class="billing_info d-flex flex-row align-items-center justify-content-start">
+												<label class="checkbox_container">
+													<input type="checkbox" id="cb_2" name="billing_checkbox" class="billing_checkbox">
+													<span class="checkbox_mark"></span>
+													<span class="checkbox_text">Subscribe to our newsletter</span>
+												</label>
+											</li>
+										</ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+					<!-- Cart Total -->
+					<div class="col-lg-6 cart_col">
+						<div class="cart_total">
+							<div class="checkout_title">Cart Total</div>
+							<ul class="cart_extra_total_list">
+								<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_extra_total_title">Subtotal</div>
+									<div class="cart_extra_total_value ml-auto">${{ total }}</div>
+								</li>
+								<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_extra_total_title">Shipping</div>
+									<div class="cart_extra_total_value ml-auto">Free</div>
+								</li>
+								<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_extra_total_title">Total</div>
+									<div class="cart_extra_total_value ml-auto">${{ total }}</div>
+								</li>
+							</ul>
+							<div class="cart_text">
+								<p>Please note the total price of your order can not over $30</p>
+							</div>
+							<div class="checkout_button trans_200"><a onclick="document.getElementById('checkout_form').submit();" class="btn stripe-button-el"><i class="fas fa-credit-card"></i> Place Order</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+	<div class="colorlib">
+		<div class="container">
+			<div class="row row-pb-lg">
+				<div class="col-md-12 col-md-offset-1 text-center">
+					<h2 class="text-center my_title">You have no items in the cart!</h2>
+					<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+						<div class="button load_more ml-auto mr-auto">
+							<div class="button button_continue trans_200"><a href="{% url 'shop:allProdCat' %}">Continue Shopping</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+    	$(".stripe-button-el span").remove();
+        $("a.stripe-button-el").removeAttr('style').css({
+            "display":"inline-block",
+            "width":"100%",
+            "padding":"15px",
+            "background":"#3fb0ac",
+            "color":"white",
+            "font-size":"1.3em",
+            "font-family": "Roboto Mono"
+        }).html("<i class=\"fas fa-credit-card\"></i> Place Order");
+    });
+</script>
+{% endblock %}

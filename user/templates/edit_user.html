@@ -1,0 +1,137 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block metadescription %}
+	Edit user profile.
+{% endblock %}
+
+{% block title %}
+	Edit user profile - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/cart.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-secure.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Profile</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Edit Profile</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<!-- Message -->
+			<div class="col-lg-6 offset-lg-3">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						      <span aria-hidden="true">&times;</span>
+						    </button>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+			{% if request.user.is_authenticated %}
+				<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center bg-white">
+					<br>
+					<h2 class="my_title">Change your password?</h2>
+					<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+						<div class="ml-auto mr-auto">
+							<div class="button button_continue trans_200"><a href="{% url 'user:change_password' %}">Password Setting</a></div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
+					<br>
+					<h1 class="text-center my_title">User Profile</h1>
+					<br>
+					<div class="col-10 col-sm-10 col-md-10 col-lg-10 mx-auto bg-light">
+						<form action="{% url 'user:edit_profile' %}" method="POST" enctype="multipart/form-data">
+							{% csrf_token %}
+							<fieldset class="form-group">
+								<legend class="border-bottom mb-4 text-center">Update your profile</legend>
+								{{ user_form| crispy }}
+								{{ formset | crispy }}
+							</fieldset>
+							<div class="form-group">
+								<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+									<div class="cart_buttons_inner ml-sm-auto d-flex flex-row align-items-start justify-content-start flex-wrap">
+										<div class="button trans_200"><button type="submit" class="btn stripe-button-el">Save Profile</button></div>
+									</div>
+								</div>
+							</div>
+						</form>
+						<br>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    $('.dateinput').datetimepicker(
+    {
+        format: 'YYYY-MM-DD',
+        sideBySide: true
+    }
+    );
+});
+
+$(document).ready(function(){
+	$('.checkboxinput').bootstrapToggle({
+      on: 'Yep',
+      off: 'Nope',
+      onstyle: 'info',
+      offstyle: 'secondary'
+    });
+
+	$(".stripe-button-el span").remove();
+    $("button.stripe-button-el").removeAttr('style').css({
+        "display":"inline-block",
+        "width":"100%",
+        "padding":"10px",
+        "background":"#5a5a5a",
+        "color":"white",
+        "font-size":"1.3em",
+        "font-family": "Baloo Bhai"
+    }).html("<i class='fas fa-user'></i> Save Profile");
+});
+</script>
+{% endblock %}

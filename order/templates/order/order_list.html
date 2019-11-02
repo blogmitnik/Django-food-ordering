@@ -1,0 +1,131 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+	Order History - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/cart.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-family.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Manage Orders</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Orders</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<br>
+			<h1 class="text-center my_title">You have {{ order_details.count }} order(s)</h1>
+			<br>
+			{% if order_details %}
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<td>Order ID</td>
+							<td>Shipping To</td>
+							<td>Order Place</td>
+							<td>Order Date</td>
+							<td>Total Price</td>
+							<td>Status</td>
+							<td>Action</td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for order in order_details %}
+						<tr>
+							<td>#{{ order.id }}</td>
+							<td>{{ order.shippingName }}</td>
+							<td>{{ order.order_place_str }}</td>
+							<td>{{ order.created | date:"Y M d" }}</td>
+							<td>$ {{ order.total }}</td>
+							<td>
+								{% if request.user.is_staff %}
+									{% ifequal order.status 0 %}
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Pending</a>
+										<div class="dropdown-menu dropdown-menu-right">
+											<form id="_order_status_{{order.id}}" action="{% url 'order:change_status' order.id 1 %}" method="post">
+												{% csrf_token %}
+												<input type="hidden" name="status" value="1" />
+												<a href="#" onclick="document.getElementById('_order_status_{{order.id}}').submit();" class="dropdown-item">Done</a>
+											</form>
+										</div>
+									{% else %}
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Done</a>
+										<div class="dropdown-menu dropdown-menu-right">
+											<form id="_order_status_{{order.id}}" action="{% url 'order:change_status' order.id 0 %}" method="post">
+												{% csrf_token %}
+												<input type="hidden" name="status" value="0" />
+												<a href="#" onclick="document.getElementById('_order_status_{{order.id}}').submit();" class="dropdown-item">Pending</a>
+											</form>
+										</div>
+									{% endifequal %}
+								{% else %}
+									{% ifequal order.status 0 %}
+										Pedding
+									{% else %}
+										Done
+									{% endifequal %}
+								{% endif %}
+							</td>
+							<td>
+								<form id="_order_cencel_{{order.id}}" action="{% url 'order:order_delete' order.id %}" method="post">
+									{% csrf_token %}
+									<a href="{% url 'order:order_detail' order.id %}" id="order-{{ order.id }}" class="btn btn-sm btn-success">View</a>
+									{% if order.emailAddress == request.user.email %}
+										{% ifequal order.status 0 %}
+											<input type="hidden" name="remove_order" value="{{ order.id }}" /> 
+											<a href="#" onclick="document.getElementById('_order_cencel_{{order.id}}').submit();" id="delete-order-{{ order.id }}" class="btn btn-sm btn-secondary">Cancel</a>
+										{% endifequal %}
+									{% endif %}
+								</form> 
+							</td>
+						</tr>
+						{% endfor %}
+						{% if total_price %}
+						<tr>
+							<td class="text-right" colspan="7">Today total: $ {{total_price}}</td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			{% else %}
+				<p>You have not placed any order yet!</p>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'shop/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block metadescription %}
+	Sign in to Django Cart App.
+{% endblock %}
+
+{% block title %}
+	Sign in your account - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/cart.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/cart_responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/cart.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<!-- Cover -->
+<div id="page">
+	<aside id="colorlib-hero" class="breadcrumbs">
+		<div class="flexslider">
+			<ul class="slides">
+			   	<li style="background-image: url(/static/img/cover-img-login.jpg);">
+			   		<div class="overlay"></div>
+			   		<div class="container">
+			   			<div class="row">
+				   			<div class="col-md-12 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
+				   				<div class="slider-text-inner text-center">
+				   					<h1>Sign In</h1>
+				   					<h2 class="bread"><span><a href="/">Home</a></span> <span>Sign In</span></h2>
+				   				</div>
+				   			</div>
+				   		</div>
+			   		</div>
+			   	</li>
+		  	</ul>
+	  	</div>
+	</aside>
+</div>
+
+<div class="colorlib-shop">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 offset-lg-3">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						      <span aria-hidden="true">&times;</span>
+						    </button>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
+				<h2 class="my_title">New Customer?</h2>
+				<br>
+				<p>When you create an account, you can see your orders history.</p>
+				<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+					<div class="ml-auto mr-auto">
+						<div class="button button_continue trans_200"><a href="{% url 'signup' %}">Create Account</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
+				<div>
+					<br>
+					<h2 class="my_title text-center">Registered Customers Only</h2>
+					<form method="POST">
+						{% csrf_token %}
+						<p>{{ form | crispy }}</p>
+						<div class="cart_buttons d-flex flex-row align-items-start justify-content-start">
+							<div class="cart_buttons_inner ml-sm-auto d-flex flex-row align-items-start justify-content-start flex-wrap">
+								<div class="button trans_200"><button type="submit" class="btn stripe-button-el">Login now</button></div>
+							</div>
+						</div>
+					</form>
+					<br>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".stripe-button-el span").remove();
+    $("button.stripe-button-el").removeAttr('style').css({
+        "display":"inline-block",
+        "width":"100%",
+        "padding":"10px",
+        "background":"#3fb0ac",
+        "color":"white",
+        "font-size":"1.3em",
+        "font-family": "Baloo Bhai"
+    }).html("Login now");
+});
+</script>
+{% endblock %}

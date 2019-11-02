@@ -1,0 +1,429 @@
+{% extends "shop/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	Welcome - Django Cart App
+{% endblock %}
+
+{% block 'additional_includes' %}
+	<link href='{% static "shop/css/main_styles.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/responsive.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/animate.css" %}' rel='stylesheet' type='text/css'>
+	<link href='{% static "shop/css/flexslider.css" %}' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="{% static 'shop/js/custom.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.waypoints.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.flexslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/jquery.stellar.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'shop/js/main.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% load pinax_ratings_tags %}
+<!-- Home -->
+<div class="super_overlay"></div>
+<div class="colorlib-loader"></div>
+
+<div class="home">
+	<!-- Home Slider -->
+	<div class="home_slider_container2">
+		<div class="owl-carousel owl-theme home_slider">
+			
+			<!-- Slide -->
+			<div class="owl-item">
+				<div class="background_image" style="background-image:url(/static/shop/images/home_banner_1.jpg)"></div>
+				<div class="container fill_height">
+					<div class="row fill_height">
+						<div class="col fill_height">
+							<div class="home_container d-flex flex-column align-items-center justify-content-start">
+								<div class="home_content">
+									<div class="home_title">New Arrivals</div>
+									<div class="home_subtitle">Summer Menu</div>
+									<div class="home_items">
+										<div class="row">
+											<div class="col-sm-3 offset-lg-1">
+												<div class="home_item_side"><a href="{% url 'shop:allProdCatFilter' 'new' %}"><img src="/static/shop/images/new_arrival_1.jpg" alt="New Arrival"></a></div>
+											</div>
+											<div class="col-lg-4 col-md-6 col-sm-8 offset-sm-2 offset-md-0">
+												<div class="product home_item_large">
+													<div class="product_tag d-flex flex-column align-items-center justify-content-center">
+														<div>
+															<div>from</div>
+															<div>$15<span>.00</span></div>
+														</div>
+													</div>
+													<div class="product_image"><img src="/static/shop/images/new_arrival_2.jpg" alt="New Arrival"></div>
+													<div class="product_content">
+														<div class="product_info d-flex flex-row align-items-start justify-content-start">
+															<div>
+																<div>
+																	<div class="product_name"><a href="{% url 'shop:allProdCatFilter' 'new' %}">Real Delicious Chinese Food</a></div>
+																	<div class="product_category">Just in <a href="{% url 'shop:allProdCatFilter' 'new' %}">Here</a></div>
+																</div>
+															</div>
+															<div class="ml-auto text-right">
+																<div class="rating_r rating_r_4 home_item_rating"><i></i><i></i><i></i><i></i><i></i></div>
+																<div class="product_price text-right">$10<span>.00</span></div>
+															</div>
+														</div>
+														<div class="product_buttons">
+															<div class="text-right d-flex flex-row align-items-start justify-content-start">
+																<div class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+																	<div><div><img src="/static/shop/images/heart.svg" alt=""><div>+</div></div></div>
+																</div>
+																<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+																	<div><div><img src="/static/shop/images/cart_2.svg" alt=""><div>+</div></div></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="home_item_side"><a href="{% url 'shop:allProdCatFilter' 'new' %}"><img src="/static/shop/images/new_arrival_3.jpg" alt="New Arrival"></a></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+
+			<!-- Slide -->
+			<div class="owl-item">
+				<div class="background_image" style="background-image:url(/static/shop/images/home_banner_2.jpg)"></div>
+				<div class="container fill_height">
+					<div class="row fill_height">
+						<div class="col fill_height">
+							<div class="home_container d-flex flex-column align-items-center justify-content-start">
+								<div class="home_content">
+									<div class="home_title">Popular</div>
+									<div class="home_subtitle">Summer Menu</div>
+									<div class="home_items">
+										<div class="row">
+											<div class="col-sm-3 offset-lg-1">
+												<div class="home_item_side"><a href="{% url 'shop:allProdCatFilter' 'hot' %}"><img src="/static/shop/images/most_popular_1.jpg" alt=""></a></div>
+											</div>
+											<div class="col-lg-4 col-md-6 col-sm-8 offset-sm-2 offset-md-0">
+												<div class="product home_item_large">
+													<div class="product_tag d-flex flex-column align-items-center justify-content-center">
+														<div>
+															<div>from</div>
+															<div>$15<span>.00</span></div>
+														</div>
+													</div>
+													<div class="product_image"><img src="/static/shop/images/most_popular_2.jpg" alt=""></div>
+													<div class="product_content">
+														<div class="product_info d-flex flex-row align-items-start justify-content-start">
+															<div>
+																<div>
+																	<div class="product_name"><a href="{% url 'shop:allProdCatFilter' 'hot' %}">Most Popular Meal</a></div>
+																	<div class="product_category">Just In <a href="{% url 'shop:allProdCatFilter' 'hot' %}">Here</a></div>
+																</div>
+															</div>
+															<div class="ml-auto text-right">
+																<div class="rating_r rating_r_4 home_item_rating"><i></i><i></i><i></i><i></i><i></i></div>
+																<div class="product_price text-right">$20<span>.00</span></div>
+															</div>
+														</div>
+														<div class="product_buttons">
+															<div class="text-right d-flex flex-row align-items-start justify-content-start">
+																<div class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+																	<div><div><img src="/static/shop/images/heart.svg" alt=""><div>+</div></div></div>
+																</div>
+																<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+																	<div><div><img src="/static/shop/images/cart_2.svg" alt=""><div>+</div></div></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="home_item_side"><a href="{% url 'shop:allProdCatFilter' 'hot' %}"><img src="/static/shop/images/most_popular_3.jpg" alt=""></a></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+
+			<!-- Slide -->
+			<div class="owl-item">
+				<div class="background_image" style="background-image:url(/static/shop/images/home_banner_3.jpg)"></div>
+				<div class="container fill_height">
+					<div class="row fill_height">
+						<div class="col fill_height">
+							<div class="home_container d-flex flex-column align-items-center justify-content-start">
+								<div class="home_content">
+									<div class="home_title">Premium Selected</div>
+									<div class="home_subtitle">Summer Menu</div>
+									<div class="home_items">
+										<div class="row">
+											<div class="col-sm-3 offset-lg-1">
+												<div class="home_item_side"><a href="{% url 'shop:allProdCatFilter' 'liked' %}"><img src="/static/shop/images/premium_1.jpg" alt="Premium"></a></div>
+											</div>
+											<div class="col-lg-4 col-md-6 col-sm-8 offset-sm-2 offset-md-0">
+												<div class="product home_item_large">
+													<div class="product_tag d-flex flex-column align-items-center justify-content-center">
+														<div>
+															<div>from</div>
+															<div>$23<span>.00</span></div>
+														</div>
+													</div>
+													<div class="product_image"><img src="/static/shop/images/premium_2.jpg" alt=""></div>
+													<div class="product_content">
+														<div class="product_info d-flex flex-row align-items-start justify-content-start">
+															<div>
+																<div>
+																	<div class="product_name"><a href="{% url 'shop:allProdCatFilter' 'liked' %}">Personal Favorite Delicious Meal</a></div>
+																	<div class="product_category">In <a href="{% url 'shop:allProdCatFilter' 'liked' %}">here</a></div>
+																</div>
+															</div>
+															<div class="ml-auto text-right">
+																<div class="rating_r rating_r_5 home_item_rating"><i></i><i></i><i></i><i></i><i></i></div>
+																<div class="product_price text-right">$25<span>.00</span></div>
+															</div>
+														</div>
+														<div class="product_buttons">
+															<div class="text-right d-flex flex-row align-items-start justify-content-start">
+																<div class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+																	<div><div><img src="/static/shop/images/heart.svg" alt=""><div>+</div></div></div>
+																</div>
+																<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+																	<div><div><img src="/static/shop/images/cart_2.svg" alt=""><div>+</div></div></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="home_item_side"><a href="{% url 'shop:allProdCatFilter' 'liked' %}"><img src="/static/shop/images/premium_3.jpg" alt=""></a></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="home_slider_nav home_slider_nav_prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
+		<div class="home_slider_nav home_slider_nav_next"><i class="fa fa-chevron-right" aria-hidden="true"></i></div>
+
+		<!-- Home Slider Dots -->
+		
+		<div class="home_slider_dots_container">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="home_slider_dots">
+							<ul id="home_slider_custom_dots" class="home_slider_custom_dots d-flex flex-row align-items-center justify-content-center">
+								<li class="home_slider_custom_dot active">01</li>
+								<li class="home_slider_custom_dot">02</li>
+								<li class="home_slider_custom_dot">03</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+</div>
+
+<!-- Products -->
+
+<div class="products">
+	<div class="container">
+		<!-- Messages -->
+		{% if messages %}
+		<div class="col-lg-6 offset-lg-3">
+			{% for message in messages %}
+				<div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				      <span aria-hidden="true">&times;</span>
+				    </button>
+					{{ message }}
+				</div>
+			{% endfor %}
+		</div>
+		{% endif %}
+
+		<div class="row products_row">
+			<div class="col-lg-6 offset-lg-3">
+				<div class="section_title text-center">Popular Foods Collection</div>
+			</div>
+		</div>
+		<div class="row page_nav_row">
+			<div class="col">
+				<div class="page_nav">
+					<ul class="d-flex flex-row align-items-start justify-content-center">
+						{% for place in places %}
+							<li><a href="{% url 'shop:restaurants' place.slug %}">{{ place.name }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row products_row">
+			<!-- Popular Products -->
+			{% for product in popular_products %}
+			<div class="col-xl-4 col-md-6">
+				<div class="product">
+					<div class="product_image"><a href="{{ product.get_url }}"><img src="{{ product.image.url }}" alt="{{ product.name }}"></a></div>
+					<div class="product_content">
+						<div class="product_info d-flex flex-row align-items-start justify-content-start">
+							<div>
+								<div>
+									<div class="product_name"><a href="{{ product.get_url }}">{{ product.name }}</a></div>
+									<div class="product_category">In <a href="{{ product.category.get_url }}">{{ product.category.name }}</a></div>
+								</div>
+							</div>
+							<div class="ml-auto text-right">
+								{% overall_rating product as the_overall_rating %}
+								<div class="rating_r rating_r_{{ the_overall_rating|floatformat:'0' }} home_item_rating"><i></i><i></i><i></i><i></i><i></i></div>
+								<div class="product_price text-right">${{ product.price|floatformat }}<span>.00</span></div>
+							</div>
+						</div>
+						<div class="product_buttons">
+							<div class="text-right d-flex flex-row align-items-start justify-content-start">
+								<div class="product_button product_fav text-center d-flex flex-column align-items-center justify-content-center">
+									<div><div><a href="{% url 'like:like_product' product.slug %}">{% if product.id in liked_items %}<img src="/static/shop/images/unlike.svg" class="svg" alt="unlike">{% else %}<img src="/static/shop/images/like.svg" class="svg" alt="">{% endif %}</a></div></div>
+								</div>
+								<div class="product_button product_cart text-center d-flex flex-column align-items-center justify-content-center">
+									<div><div><a href="{{ product.get_url }}" class="custom_a"><img src="/static/shop/images/cart.svg" class="svg" alt=""></a>{% for cart_item in cart_items %}{% ifequal cart_item.product_id product.id %}<div>{{ cart_item.quantity }}</div>{% endifequal %}{% endfor %}</div></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Popular Products -->
+			{% endfor %}
+		</div>
+		<div class="row load_more_row">
+			<div class="col">
+				<div class="button load_more ml-auto mr-auto"><a href="{% url 'shop:allProdCat' %}">View More</a></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Boxes -->
+<div class="boxes">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="boxes_container d-flex flex-row align-items-start justify-content-between flex-wrap">
+
+					<!-- Box -->
+					<div class="box">
+						<div class="background_image" style="background-image:url(/static/shop/images/place_1.jpg)"></div>
+						<div class="box_content d-flex flex-row align-items-center justify-content-start">
+							<div class="box_left">
+								<div class="box_image">
+									<a href="{% url 'shop:restaurants' 'qsmc' %}">
+										<div class="background_image" style="background-image:url(/static/shop/images/place_1_img.jpg)"></div>
+									</a>
+								</div>
+							</div>
+							<div class="box_right text-center">
+								<div class="box_title">QSMC</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Box -->
+					<div class="box">
+						<div class="background_image" style="background-image:url(/static/shop/images/place_2.jpg)"></div>
+						<div class="box_content d-flex flex-row align-items-center justify-content-start">
+							<div class="box_left">
+								<div class="box_image">
+									<a href="{% url 'shop:restaurants' 'csmc' %}">
+										<div class="background_image" style="background-image:url(/static/shop/images/place_2_img.jpg)"></div>
+									</a>
+								</div>
+							</div>
+							<div class="box_right text-center">
+								<div class="box_title">CSMC</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Box -->
+					<div class="box">
+						<div class="background_image" style="background-image:url(/static/shop/images/place_3.jpg)"></div>
+						<div class="box_content d-flex flex-row align-items-center justify-content-start">
+							<div class="box_left">
+								<div class="box_image">
+									<a href="#">
+										<div class="background_image" style="background-image:url(/static/shop/images/place_3_img.jpg)"></div>
+									</a>
+								</div>
+							</div>
+							<div class="box_right text-center">
+								<div class="box_title">QRDC</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Features -->
+
+<div class="features">
+	<div class="container">
+		<div class="row">
+			
+			<!-- Feature -->
+			<div class="col-lg-4 feature_col">
+				<div class="feature d-flex flex-row align-items-start justify-content-start">
+					<div class="feature_left">
+						<div class="feature_icon"><img src="/static/shop/images/icon_1.svg" alt=""></div>
+					</div>
+					<div class="feature_right d-flex flex-column align-items-start justify-content-center">
+						<div class="feature_title">Fast Secure Order</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Feature -->
+			<div class="col-lg-4 feature_col">
+				<div class="feature d-flex flex-row align-items-start justify-content-start">
+					<div class="feature_left">
+						<div class="feature_icon ml-auto mr-auto"><img src="/static/shop/images/icon_2.svg" alt=""></div>
+					</div>
+					<div class="feature_right d-flex flex-column align-items-start justify-content-center">
+						<div class="feature_title">Local Premium Delicious</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Feature -->
+			<div class="col-lg-4 feature_col">
+				<div class="feature d-flex flex-row align-items-start justify-content-start">
+					<div class="feature_left">
+						<div class="feature_icon"><img src="/static/shop/images/icon_3.svg" alt=""></div>
+					</div>
+					<div class="feature_right d-flex flex-column align-items-start justify-content-center">
+						<div class="feature_title">Free Delivery</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock content %}
